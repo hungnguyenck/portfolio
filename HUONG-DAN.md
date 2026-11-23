@@ -104,6 +104,17 @@ Bài mẫu `example-post` đang ở trạng thái nháp để bạn xem cách l�
 ### B8. Ảnh
 Chọn đúng tỉ lệ để trang không bị giật: thumbnail **1:1** (800×800), slide **16:9** (1920×1080 hoặc 1120×630), ảnh bìa blog 16:9. Nén ảnh trước khi upload (squoosh.app hoặc tinypng.com): thumbnail dưới ~150KB, slide dưới ~300KB. CMS chưa tự nén ảnh.
 
+### B9. Viết nội dung project: xuống dòng, ảnh, YouTube
+Các ô **Challenge**, **What I did** và **Nội dung thêm** của Project (và nội dung Blog) là trình soạn thảo có thanh công cụ:
+- **Enter** = xuống dòng/đoạn mới. Có gạch đầu dòng, đánh số, chữ đậm, link, tiêu đề.
+- **Ảnh**: nút **Image** trên thanh công cụ (ảnh lưu vào `assets/uploads`, nhớ nén trước).
+- **YouTube**: dán link video **trên 1 dòng riêng** (youtube.com/watch?v=..., youtu.be/..., shorts), hoặc bấm nút **YouTube**. Dòng đó hiện thành khung video 16:9. Muốn bắt đầu ở giây thứ 90: thêm `?t=90` vào link.
+- Cửa sổ chi tiết ở trang chủ hiện Challenge/What I did/Results; phần **Nội dung thêm** chỉ hiện ở trang riêng của project (nút OPEN FULL PAGE).
+
+### B10. Hero: phần mặc định và Spotify
+- *Trang chủ → Hero → Phần giới thiệu mặc định*: chọn Full story hoặc Summary hiện sẵn khi mở trang.
+- *Cài đặt chung → Spotify → Vị trí hiển thị*: "Dưới ảnh ở Hero" (player đầu tiên) hoặc "Mục riêng bên dưới" (nhiều playlist).
+
 ---
 
 ## PHẦN C. Chạy thử trên máy (không bắt buộc)

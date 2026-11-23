@@ -29,12 +29,18 @@ collections:
           - { label: "Dòng vai trò (dưới tên)", name: role, widget: string }
           - { label: "Ảnh chân dung", name: image, widget: image, hint: "Tỉ lệ 4:5 (ví dụ 640×800), dưới 200KB." }
           - { label: "Mô tả ảnh (alt)", name: image_alt, widget: string, required: false }
-          - { label: "Full story", name: full_story, widget: markdown, hint: "Nút 'Full story' ở trang chủ. Cách 1 dòng trống để tách đoạn." }
+          - label: "Phần giới thiệu mặc định khi mở trang"
+            name: default_intro
+            widget: select
+            default: full
+            options: [{ label: "Full story", value: full }, { label: "Summary", value: summary }]
+            hint: "Khách vào web sẽ thấy phần nào trước (vẫn bấm đổi được)."
+          - { label: "Full story", name: full_story, widget: markdown, hint: "Nút 'Full story' ở trang chủ. Enter = đoạn mới." }
           - label: "Summary (các gạch đầu dòng)"
             name: summary
             widget: list
             field: { label: "Ý", name: text, widget: text }
-            hint: "Nút 'Summary' ở trang chủ."
+            hint: "Nút 'Summary' ở trang chủ. Trong 1 ý có thể xuống dòng và gõ '- ' đầu dòng để tạo gạch đầu dòng con."
           - label: "4 số – view MARKETING (cam)"
             name: stats_marketing
             widget: list
@@ -107,6 +113,11 @@ collections:
             widget: object
             fields:
               - { label: "Bật mục Spotify", name: enabled, widget: boolean, default: false }
+              - label: "Vị trí hiển thị"
+                name: placement
+                widget: select
+                default: hero
+                options: [{ label: "Dưới ảnh ở Hero (chỉ playlist đầu tiên)", value: hero }, { label: "Mục riêng bên dưới (hiện tất cả playlist)", value: section }]
               - { label: "Tiêu đề mục", name: title, widget: string }
               - { label: "Giới thiệu ngắn", name: intro, widget: text, required: false }
               - label: "Danh sách playlist"
@@ -209,8 +220,8 @@ collections:
         fields:
           - { label: "Số", name: value, widget: string }
           - { label: "Mô tả", name: label, widget: string }
-      - { label: "Challenge", name: challenge, widget: text, required: false }
-      - { label: "What I did", name: actions, widget: text, required: false }
+      - { label: "Challenge", name: challenge, widget: markdown, required: false, hint: "Enter = xuống dòng/đoạn mới; có gạch đầu dòng, chữ đậm, chèn ảnh (nút Image). Video YouTube: dán link trên 1 dòng riêng, hoặc nút YouTube." }
+      - { label: "What I did", name: actions, widget: markdown, required: false, hint: "Giống ô Challenge: xuống dòng, gạch đầu dòng, ảnh, YouTube." }
       - label: "Results"
         name: results
         widget: list
@@ -221,7 +232,7 @@ collections:
         widget: list
         required: false
         field: { label: "Tag", name: text, widget: string }
-      - { label: "Nội dung thêm (trang riêng)", name: body, widget: markdown, required: false, hint: "Chỉ hiện ở trang riêng của project, bên dưới phần trên." }
+      - { label: "Nội dung thêm (trang riêng)", name: body, widget: markdown, required: false, hint: "Hiện ở trang riêng của project, bên dưới phần trên. Chèn ảnh bằng nút Image; chèn YouTube bằng cách dán link trên 1 dòng riêng (hoặc nút YouTube)." }
       - { label: "Thứ tự – Marketing", name: order_marketing, widget: number, value_type: int, default: 99, min: 1 }
       - { label: "Thứ tự – Product", name: order_product, widget: number, value_type: int, default: 99, min: 1 }
       - { label: "Thứ tự – Balanced", name: order_balanced, widget: number, value_type: int, default: 99, min: 1 }

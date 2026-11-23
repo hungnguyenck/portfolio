@@ -9,5 +9,21 @@
 <body>
   <!-- Sveltia CMS: a free, Git-based CMS. Reads admin/config.yml and saves changes as commits to your GitHub repo. -->
   <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+  <script>
+    /* "YouTube" button in the rich-text editor. Inserts [[youtube:LINK]]; pasting a YouTube link alone on a line works too. */
+    try {
+      if (window.CMS && CMS.registerEditorComponent) {
+        CMS.registerEditorComponent({
+          id: 'youtube',
+          label: 'YouTube',
+          fields: [{ name: 'url', label: 'Link YouTube', widget: 'string' }],
+          pattern: /^\[\[youtube:(.+?)\]\]$/,
+          fromBlock: function (m) { return { url: m[1] }; },
+          toBlock: function (o) { return '[[youtube:' + o.url + ']]'; },
+          toPreview: function (o) { return '[YouTube: ' + o.url + ']'; }
+        });
+      }
+    } catch (e) { console.warn('YouTube button not registered', e); }
+  </script>
 </body>
 </html>

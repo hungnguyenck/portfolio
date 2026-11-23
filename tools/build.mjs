@@ -66,6 +66,7 @@ const mdOpts = { resolve: u };
 
 /* ---------------- shared layout ---------------- */
 const hasPosts = site.blog?.enabled !== false && posts.length > 0;
+const spotifyAt = site.spotify?.placement === 'section' ? 'section' : 'hero';
 const spotifyList = site.spotify?.enabled ? list(site.spotify.playlists).map((p) => ({ ...p, embed: spotifyEmbed(p.url) })).filter((p) => p.embed) : [];
 function spotifyEmbed(url = '') {
   const m = String(url).match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(playlist|album|track|artist|show|episode)\/([A-Za-z0-9]+)/);
@@ -133,7 +134,7 @@ function detail(p) {
   const metrics = list(p.metrics).slice(0, 4);
   const slides = list(p.slides).filter((s) => s && s.image);
   const results = list(p.results), tags = list(p.tags);
-  const section = (h, txt) => (txt ? `<h4>${h}</h4><p>${inline(txt)}</p>` : '');
+  const section = (h, txt) => (txt ? `<h4>${h}</h4>${md(txt, mdOpts)}` : '');
   const desc = `${section('Challenge', p.challenge)}${section('What I did', p.actions)}${results.length ? `<h4>Results</h4><ul>${results.map((r) => `<li>${inline(r)}</li>`).join('')}</ul>` : ''}${tags.length ? `<ul class="chips" aria-label="Tags">${tags.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}`;
   return `<div class="inner${slides.length ? '' : ' noslide'}">${metrics.length ? `<div class="metrics">${metrics.map((m) => `<div class="mt"><b>${esc(m.value)}</b><span>${esc(m.label)}</span></div>`).join('')}</div>` : ''}${slides.length ? `<div class="slider" role="group" aria-roledescription="carousel" aria-label="Project images"><div class="track">${slides.map((s) => `<img src="${img(s.image, p.slug)}" alt="${esc(s.alt || p.title)}" width="1920" height="1080" loading="lazy">`).join('')}</div><div class="dots"></div></div>` : ''}${desc ? `<div class="desc">${desc}</div>` : ''}</div>`;
 }
@@ -190,7 +191,7 @@ ${[...withThumb.filter((p) => featuredSlugs.has(p.slug)), ...withThumb.filter((p
   <h2 class="rv"><span class="n">${num2()}</span>Skills</h2>
   <div class="sk rv">${skills.map((g) => `<div class="${g.wide ? 'wide' : ''}" style="--om:${num(g.order_marketing, 9)};--op:${num(g.order_product, 9)};--ob:${num(g.order_balanced, 9)}"><h3>${esc(g.title)}</h3><ul class="chips">${list(g.items).map((i) => `<li>${esc(i)}</li>`).join('')}</ul></div>`).join('')}</div>
 </div></section>`);
-  if (spotifyList.length) sections.push(`<section id="music"><div class="wrap">
+  if (spotifyList.length && spotifyAt === 'section') sections.push(`<section id="music"><div class="wrap">
   <div class="sh"><h2 class="rv"><span class="n">${num2()}</span>${esc(site.spotify.title || 'Playlist')}</h2><p class="sub rv">${esc(site.spotify.intro || '')}</p></div>
   <div class="sp rv">${spotifyList.map((p) => `<div>${p.title ? `<h3>${esc(p.title)}</h3>` : ''}<iframe src="${esc(p.embed)}" height="${num(p.height, 352)}" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" title="${esc(p.title || 'Spotify player')}"></iframe></div>`).join('')}</div>
 </div></section>`);
@@ -200,20 +201,23 @@ ${[...withThumb.filter((p) => featuredSlugs.has(p.slug)), ...withThumb.filter((p
   <p style="margin-top:28px"><a class="btn" href="${u('/blog/')}">All posts</a></p>
 </div></section>`);
 
-  const summary = list(hero.summary).map((s) => `<li>${inline(s)}</li>`).join('');
+  const summary = list(hero.summary).map((s) => `<li>${md(s, mdOpts).replace(/^<p>([\s\S]*?)<\/p>(?![\s\S]*<p>)/, '$1')}</li>`).join('');
+  const introDef = hero.default_intro === 'summary' ? 'tldr' : 'full';
+  const sp1 = spotifyAt === 'hero' ? spotifyList[0] : null;
+  const heroSp = sp1 ? `<div class="hero-sp" id="music">${site.spotify.title ? `<p class="sp-k">${esc(site.spotify.title)}</p>` : ''}<iframe src="${esc(sp1.embed)}" height="${Math.min(num(sp1.height, 352), 352)}" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" title="${esc(sp1.title || 'Spotify player')}"></iframe>${site.spotify.intro ? `<p class="sp-i">${esc(site.spotify.intro)}</p>` : ''}</div>` : '';
   const body = `<div class="band hero" id="top"><div class="wrap">
   <div class="hero-split">
     <div class="hero-txt">
       <h1 class="nm"><span class="nl"><span class="ln"><span>Hung</span></span><span class="ln o"><span>Nguyen</span></span></span><span class="ck"><span class="vh">(</span><span class="ckt">CK</span><span class="vh">)</span></span></h1>
       <p class="role fd" style="animation-delay:.8s">${esc(hero.role || '')}</p>
       <div class="intro fd" id="about" style="animation-delay:.9s">
-        <div class="seg" role="group" aria-label="Introduction length"><button type="button" data-v="full" aria-pressed="true">Full story</button><button type="button" data-v="tldr" aria-pressed="false">Summary</button></div>
-        <div class="pn" id="p-tldr" aria-hidden="true"><div><ul>${summary}</ul></div></div>
-        <div class="pn on" id="p-full"><div><div class="full">${md(hero.full_story, mdOpts)}</div></div></div>
+        <div class="seg" role="group" aria-label="Introduction length"><button type="button" data-v="full" aria-pressed="${introDef === 'full'}">Full story</button><button type="button" data-v="tldr" aria-pressed="${introDef === 'tldr'}">Summary</button></div>
+        <div class="pn${introDef === 'tldr' ? ' on' : ''}" id="p-tldr" aria-hidden="${introDef !== 'tldr'}"><div><ul>${summary}</ul></div></div>
+        <div class="pn${introDef === 'full' ? ' on' : ''}" id="p-full" aria-hidden="${introDef !== 'full'}"><div><div class="full">${md(hero.full_story, mdOpts)}</div></div></div>
       </div>
       <div class="fd" style="animation-delay:1s"><a class="btn" href="#work">See my work</a><a class="btn o" href="#contact">Contact me</a></div>
     </div>
-    <div class="hero-fig"><figure class="hero-img"><img src="${img(hero.image, 'hero')}" width="640" height="800" alt="${esc(hero.image_alt || '')}" fetchpriority="high"></figure></div>
+    <div class="hero-side"><div class="hero-fig"><figure class="hero-img"><img src="${img(hero.image, 'hero')}" width="640" height="800" alt="${esc(hero.image_alt || '')}" fetchpriority="high"></figure></div>${heroSp}</div>
   </div>
   ${stats('light', hero.stats_balanced)}${stats('ember', hero.stats_marketing)}${stats('blue', hero.stats_product)}
 </div></div>
