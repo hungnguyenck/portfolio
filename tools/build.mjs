@@ -77,10 +77,15 @@ const assetHash = crypto.createHash('md5').update(fs.readFileSync(path.join(ROOT
 
 function header(home) {
   const s = (id) => (home ? '#' + id : u('/#' + id));
-  const nav = [['About', s('about')], ['Work', s('work')], ['Experience', s('experience')], ['Skills', s('skills')]];
-  if (spotifyList.length) nav.push(['Playlist', s('music')]);
-  if (hasPosts) nav.push([site.blog?.navLabel || 'Writing', u('/blog/')]);
-  nav.push(['Contact', '#contact']);
+  const n = site.nav || {};
+  const on = (k, d = true) => (n[k] === undefined || n[k] === null ? d : n[k] !== false);
+  const nav = [];
+  if (on('about')) nav.push(['About', s('about')]);
+  if (on('work')) nav.push(['Work', s('work')]);
+  if (on('experience')) nav.push([n.experience_label || 'Experience & Skills', s('experience')]);  // one button for both sections
+  if (on('playlist', false) && spotifyList.length) nav.push([n.playlist_label || 'Playlist', s('music')]);
+  if (on('writing') && hasPosts) nav.push([site.blog?.navLabel || 'Writing', u('/blog/')]);
+  if (on('contact')) nav.push(['Contact', '#contact']);
   return `<header class="wrap"><div class="bar"><a class="brand" href="${u('/')}" aria-label="${esc(site.name)}, home">CK<span>.</span></a><nav aria-label="Main">${nav.map(([t, h]) => `<a href="${esc(h)}">${esc(t)}</a>`).join('')}</nav></div></header>`;
 }
 const switcher = `<div class="sw" role="group" aria-label="View"><button type="button" data-t="ember" aria-pressed="false" aria-label="Orange view: marketing, creative, user"><i style="background:#FF5E00"></i><span>Marketing</span></button><button type="button" data-t="blue" aria-pressed="false" aria-label="Blue view: product, data, technical"><i style="background:#ADE1FB"></i><span>Product</span></button><button type="button" data-t="light" aria-pressed="false" aria-label="Light view: balanced"><i style="background:#F2F3FB"></i><span>Balanced</span></button></div>`;

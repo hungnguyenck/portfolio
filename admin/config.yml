@@ -138,6 +138,18 @@ collections:
               - { label: "Giới thiệu", name: intro, widget: text, required: false }
               - { label: "Số bài mới ở trang chủ", name: latestCount, widget: number, value_type: int, default: 3 }
               - { label: "Lời công khai affiliate", name: disclosure, widget: text, hint: "Hiện trên mọi bài có sản phẩm affiliate. Xem quy định của Shopee/Amazon về câu bắt buộc." }
+          - label: "Menu trên cùng (bật/tắt từng nút)"
+            name: nav
+            widget: object
+            hint: "Tắt = nút biến mất khỏi menu (trang/mục vẫn còn, chỉ ẩn nút). Mục 'Writing' chỉ hiện khi blog đang bật và có bài."
+            fields:
+              - { label: "About", name: about, widget: boolean, default: true }
+              - { label: "Work", name: work, widget: boolean, default: true }
+              - { label: "Experience & Skills (1 nút chung)", name: experience, widget: boolean, default: true }
+              - { label: "Tên nút Experience & Skills", name: experience_label, widget: string, default: "Experience & Skills", required: false }
+              - { label: "Playlist", name: playlist, widget: boolean, default: false }
+              - { label: "Writing (blog)", name: writing, widget: boolean, default: true }
+              - { label: "Contact", name: contact, widget: boolean, default: true }
           - { label: "Dòng chân trang", name: footerNote, widget: text, required: false }
 
       - name: experience
