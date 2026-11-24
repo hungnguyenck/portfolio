@@ -23,19 +23,9 @@
 
   /* ---------- Hero: rotated "CK" fitted to the Hung / Nguyen stack ---------- */
   function fit() {
-    var nm = $('.nm'), n = $('.nl'), c = $('.ck'), t = $('.ckt'); if (!n || !c || !t) return;
-    function ck() { c.style.fontSize = '100px'; c.style.fontSize = (100 * n.offsetHeight / t.getBoundingClientRect().height) + 'px'; }
-    /* Desktop: scale the whole name so its right edge (the CK) lines up with the paragraph below. Mobile: CSS size. */
-    var ref = $('.intro') || $('.hero-txt');
-    if (nm && ref && !matchMedia('(max-width:820px)').matches) {
-      for (var k = 0; k < 2; k++) {
-        nm.style.fontSize = (k ? parseFloat(nm.style.fontSize) : 100) + 'px'; ck();
-        var w = c.getBoundingClientRect().right - nm.getBoundingClientRect().left;
-        var target = ref.getBoundingClientRect().width;
-        if (w > 0 && target > 0) nm.style.fontSize = Math.max(56, Math.min(210, parseFloat(nm.style.fontSize) * target / w)) + 'px';
-      }
-    } else if (nm) nm.style.fontSize = '';
-    ck();
+    var n = $('.nl'), c = $('.ck'), t = $('.ckt'); if (!n || !c || !t) return;
+    c.style.fontSize = '100px';
+    c.style.fontSize = (100 * n.offsetHeight / t.getBoundingClientRect().height) + 'px';
   }
   if ($('.ck')) { fit(); addEventListener('resize', fit); addEventListener('load', fit); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit); }
 
